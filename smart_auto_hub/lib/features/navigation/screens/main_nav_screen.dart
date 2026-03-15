@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../home/screens/home_screen.dart';
 import '../../vehicles/screens/vehicle_catalog_screen.dart';
 import '../../bookings/screens/my_bookings_dashboard_screen.dart';
+import '../../chatbot/screens/ai_chatbot_screen.dart';
 
 /// ----------------------------------------------------------------------------
 /// DRILL-DOWN ROUTING ARCHITECTURE
@@ -25,12 +26,12 @@ class MainNavScreen extends StatefulWidget {
 class _MainNavScreenState extends State<MainNavScreen> {
   int _selectedIndex = 0;
 
-  // Placeholder components for the top-level pages in the IndexedStack
+  // Components for the top-level pages in the IndexedStack
   final List<Widget> _screens = const [
     HomeScreen(),
     VehicleCatalogScreen(),
-    const MyBookingsDashboardScreen(),
-    Center(child: Text('AI Chat Screen')),
+    MyBookingsDashboardScreen(),
+    AiChatbotScreen(),
   ];
 
   @override

@@ -1,5 +1,6 @@
 class ApiEndpoints {
-  static const String baseUrl = 'https://api.smartautohub.com/v1';
+  // Use 10.0.2.2 for Android Emulator, localhost for iOS/Web, or your local machine IP
+  static const String baseUrl = 'http://10.0.2.2:3000/api'; 
   
   // Vehicle endpoints
   static const String vehicles = '/vehicles';

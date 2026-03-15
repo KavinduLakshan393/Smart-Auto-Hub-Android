@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../home/screens/home_screen.dart';
 import '../../vehicles/screens/vehicle_catalog_screen.dart';
+import '../../bookings/screens/my_bookings_dashboard_screen.dart';
 
 /// ----------------------------------------------------------------------------
 /// DRILL-DOWN ROUTING ARCHITECTURE
@@ -28,7 +29,7 @@ class _MainNavScreenState extends State<MainNavScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     VehicleCatalogScreen(),
-    Center(child: Text('Bookings Screen')),
+    const MyBookingsDashboardScreen(),
     Center(child: Text('AI Chat Screen')),
   ];
 

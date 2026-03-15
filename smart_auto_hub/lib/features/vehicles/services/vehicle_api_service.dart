@@ -1,11 +1,6 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import '../../../core/network/api_client.dart';
-import '../../../core/constants/api_endpoints.dart';
 import '../models/vehicle_model.dart';
 
 class VehicleApiService {
-  final ApiClient _apiClient = ApiClient();
 
   // Mock data for development
   static final List<VehicleModel> _mockVehicles = [
@@ -54,37 +49,17 @@ class VehicleApiService {
   ];
 
   Future<List<VehicleModel>> fetchVehicles({Map<String, dynamic>? queryParams}) async {
-    try {
-      final response = await _apiClient.get(ApiEndpoints.vehicles, queryParams: queryParams);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> body = json.decode(response.body);
-        final List<dynamic> data = body['data'] ?? [];
-        return data.map((json) => VehicleModel.fromJson(json)).toList();
-      } else {
-        debugPrint('API Error: ${response.statusCode}. Falling back to mock data.');
-        return _mockVehicles;
-      }
-    } catch (e) {
-      debugPrint('Fetch Error: $e. Falling back to mock data.');
-      return _mockVehicles;
-    }
+    // Returning mock data directly for development as requested
+    await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
+    return _mockVehicles;
   }
 
   Future<VehicleModel> fetchVehicleDetails(String id) async {
-    try {
-      final response = await _apiClient.get(ApiEndpoints.vehicleDetails(id));
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> body = json.decode(response.body);
-        final Map<String, dynamic> data = body['data'];
-        return VehicleModel.fromJson(data);
-      } else {
-        return _mockVehicles.firstWhere((v) => v.id == id);
-      }
-    } catch (e) {
-      debugPrint('Fetch Details Error: $e. Falling back to mock data.');
-      return _mockVehicles.firstWhere((v) => v.id == id);
-    }
+    // Returning mock data directly for development as requested
+    await Future.delayed(const Duration(milliseconds: 300)); // Simulate network delay
+    return _mockVehicles.firstWhere(
+      (v) => v.id == id,
+      orElse: () => _mockVehicles.first,
+    );
   }
 }

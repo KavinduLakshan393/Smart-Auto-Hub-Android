@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../navigation/screens/main_nav_screen.dart';
 import 'register_screen.dart';
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,16 +25,23 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    // Simulating network request for login process
-    await Future.delayed(const Duration(milliseconds: 1500));
-
-    // Save logged in state
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
+    // Call the Next.js backend
+    final authService = AuthService();
+    final success = await authService.login(email, password);
 
     if (!mounted) return;
 
@@ -42,12 +49,21 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = false;
     });
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const MainNavScreen(),
-      ),
-    );
+    if (success) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainNavScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid credentials. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -63,10 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final focusedBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(
-        color: colorScheme.primary,
-        width: 2.0,
-      ),
+      borderSide: BorderSide(color: colorScheme.primary, width: 2.0),
     );
 
     return Scaffold(
@@ -74,16 +87,16 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 32.0,
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // --- 1. Top Area (The Welcome) ---
-                const Icon(
-                  Icons.directions_car_rounded,
-                  size: 64,
-                ),
+                const Icon(Icons.directions_car_rounded, size: 64),
                 const SizedBox(height: 24),
                 Text(
                   'Welcome Back!',
@@ -240,7 +253,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 48), // Padding to push footer down
-
                 // --- The Switcher (Footer) ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
